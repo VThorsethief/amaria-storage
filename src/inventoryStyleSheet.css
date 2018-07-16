@@ -1,0 +1,48 @@
+.root{
+	-fx-background-color: #2F7EE0;
+	-fx-text-fill: #FFFFFF;
+}
+
+.label{
+	-fx-text-fill: #FFFFFF;
+	-fx-text-weight: bold;
+	-fx-text-alignment: center;
+}
+
+
+#PageTitles{
+	-fx-text-alignment: center;
+}
+
+#CompoundPane{
+	-fx-background-color: #ffffff;
+	-fx-text-fill:#000000;
+}
+
+#queryLabels{
+	-fx-text-fill: #000000;
+
+}
+
+#CompoundMenu{
+	-fx-color: #ffffff;
+	-fx-font-size: 20;
+	-fx-font-weight: bold;
+}
+
+#flagged_entries{
+	-fx-text-fill: #ff0000;
+	-fx-font-color: #FFFFFF;
+}
+
+#query_font{
+	-fx-text-fill: #0d7af2;	
+}
+
+.inputEntry{
+	-fz-text-fill: black;
+}
+
+.hidden{
+	display: none;
+}

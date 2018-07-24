@@ -28,11 +28,12 @@ import javafx.event.EventHandler;
 
 public class InventoryGUI extends Application implements InventoryWorkbookReader{
 	ScreenController controller = new ScreenController();
-	private enum modes {START, SEARCH, ADD, MENU};
+	private enum modes {START, SEARCH, ADD, MENU, COMPUTE};
 	private modes currentModes = modes.START;
 	InventoryButton backButton;
 	AdditionScreen additionScreen;
 	SearchScreen searchScreen;
+	ComputationScreen compScreen;
 	ArrayList<Freezerbox> loadedBoxes;
 	ArrayList<Compound> loadedCompounds;
 	Freezerbox sampleBox;
@@ -82,6 +83,11 @@ public class InventoryGUI extends Application implements InventoryWorkbookReader
 		additionScreen = new AdditionScreen();
 		controller.addScreen("add", additionScreen);
 		
+		//Add Computation Screen
+		compScreen = new ComputationScreen(this.loadedCompounds);
+		controller.addScreen("compute", compScreen);
+		
+
 		//Setting GUI
 		titlePane.getChildren().addAll(title, startButton);
 		Scene scene = new Scene(titlePane, primaryStage.getWidth()* .4,primaryStage.getHeight()* .5);
@@ -93,6 +99,7 @@ public class InventoryGUI extends Application implements InventoryWorkbookReader
 		startButton.setOnAction(screenTransition);
 		menuPane.getSearchButton().setOnAction(screenTransition);
 		menuPane.getAddButton().setOnAction(screenTransition);
+		menuPane.getComputeButton().setOnAction(screenTransition);
 		searchScreen.getSearchSearchButton().setOnAction(screenTransition);
 		backButton.setOnAction(screenTransition);
 		
@@ -115,12 +122,16 @@ public class InventoryGUI extends Application implements InventoryWorkbookReader
 				case "Add": controller.activate("add"); 
 						additionScreen.buildScreen(backButton); 
 						setScreenMode(modes.ADD); break;
+				case "Compute": controller.activate("compute");
+						compScreen.buildScreen(backButton);
+						setScreenMode(modes.COMPUTE); break;
 				case "Back":{
 					switch(getScreenMode()){
 					case SEARCH: controller.activate("menu"); break;
 					case ADD: controller.activate("menu"); saveCompounds();break; 
 					case START: controller.activate("start");break;
 					case MENU: controller.activate("start");break;
+					case COMPUTE: controller.activate("menu"); break;
 					}
 				}; break;
 				case "Search Compounds": searchScreen.resultScreen.buildScreen(backButton); 
@@ -745,6 +756,7 @@ class MenuScreen extends GridPane{
 			menuButtons.add(removeButton);
 			computeButton = new InventoryButton("Compute");
 			menuButtons.add(computeButton);
+			
 			
 			this.add(searchButton,0,0);
 			this.add(addButton,2,0);

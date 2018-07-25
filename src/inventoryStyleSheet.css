@@ -46,3 +46,8 @@
 .hidden{
 	display: none;
 }
+
+.emptyEntry{
+	-fx-text-inner-color: gray;
+	-fx-alignment: center;
+}

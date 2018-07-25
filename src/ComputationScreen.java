@@ -1,15 +1,19 @@
 import java.util.ArrayList;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
 public class ComputationScreen extends VBox{
@@ -19,15 +23,15 @@ public class ComputationScreen extends VBox{
 	RadioButton liquidOption;
 	RadioButton solidOption;
 	AdditionLabel targetVolumeLabel; 
-	InventoryTextFields targetVolumeInput;
+	VariableEntryField targetVolumeInput;
 	AdditionLabel targetConcentrationLabel;
-	InventoryTextFields targetConcentrationInput;
+	VariableEntryField targetConcentrationInput;
 	AdditionLabel drugOptionLabel;
 	ComboBox<String> options;
 	AdditionLabel diluentLabel;
-	InventoryTextFields diluentInput;
+	VariableEntryField diluentInput;
 	AdditionLabel drugLabel;
-	InventoryTextFields drugInput;
+	VariableEntryField drugInput;
 	ToggleGroup stateGroupings;
 	
 	InventoryButton aliquotButton;
@@ -60,17 +64,20 @@ public class ComputationScreen extends VBox{
 		
 		
 		targetVolumeLabel = new AdditionLabel("Target Volume: ");
-		targetVolumeInput = new InventoryTextFields();
+		targetVolumeInput = new VariableEntryField();
+		targetVolumeInput.setText("Target Volume");
 		targetConcentrationLabel = new AdditionLabel("Target Concentration: ");
-		targetConcentrationInput = new InventoryTextFields();
-		targetConcentrationInput.setText("Target Concentration Here");
+		targetConcentrationInput = new VariableEntryField();
+		targetConcentrationInput.setText("Target Concentration");
 		
 		drugOptionLabel = new AdditionLabel("Drug Option: ");
 		options = new ComboBox<String>();
 		diluentLabel = new AdditionLabel("Amount of Diluent: ");
-		diluentInput = new InventoryTextFields();
+		diluentInput = new VariableEntryField();
+		diluentInput.setText("Amount of Diluent");
 		drugLabel = new AdditionLabel("Amount of Diluent: ");
-		drugInput = new InventoryTextFields();
+		drugInput = new VariableEntryField();
+		drugInput.setText("Amount of Drug");
 		aliquotButton = new InventoryButton("Make Aliquots");
 		byMassButton  = new InventoryButton("Find By Mass");
 		byVolumeButton = new InventoryButton("Find By Volume");
@@ -124,7 +131,7 @@ public class ComputationScreen extends VBox{
 	/**
 	 * @return the targetVolumenInput
 	 */
-	public InventoryTextFields getTargetVolumenInput() {
+	public VariableEntryField getTargetVolumenInput() {
 		return targetVolumeInput;
 	}
 
@@ -132,7 +139,7 @@ public class ComputationScreen extends VBox{
 	/**
 	 * @return the targetConcentrationInput
 	 */
-	public InventoryTextFields getTargetConcentrationInput() {
+	public VariableEntryField getTargetConcentrationInput() {
 		return targetConcentrationInput;
 	}
 
@@ -156,7 +163,7 @@ public class ComputationScreen extends VBox{
 	/**
 	 * @return the drugInput
 	 */
-	public InventoryTextFields getDrugInput() {
+	public VariableEntryField getDrugInput() {
 		return drugInput;
 	}
 
@@ -180,7 +187,7 @@ public class ComputationScreen extends VBox{
 	/**
 	 * @param targetVolumenInput the targetVolumenInput to set
 	 */
-	public void setTargetVolumenInput(InventoryTextFields targetVolumenInput) {
+	public void setTargetVolumenInput(VariableEntryField targetVolumenInput) {
 		this.targetVolumeInput = targetVolumenInput;
 	}
 
@@ -188,7 +195,7 @@ public class ComputationScreen extends VBox{
 	/**
 	 * @param targetConcentrationInput the targetConcentrationInput to set
 	 */
-	public void setTargetConcentrationInput(InventoryTextFields targetConcentrationInput) {
+	public void setTargetConcentrationInput(VariableEntryField targetConcentrationInput) {
 		this.targetConcentrationInput = targetConcentrationInput;
 	}
 
@@ -212,9 +219,32 @@ public class ComputationScreen extends VBox{
 	/**
 	 * @param drugInput the drugInput to set
 	 */
-	public void setDrugInput(InventoryTextFields drugInput) {
+	public void setDrugInput(VariableEntryField drugInput) {
 		this.drugInput = drugInput;
 	}
 	
-
 }
+
+class VariableEntryField extends InventoryTextFields{
+	EntryFocus focusEvent;
+	
+	VariableEntryField(){
+		super();
+		this.getStyleClass().add("emptyEntry");
+		focusEvent = new EntryFocus();
+		this.setOnMouseClicked(focusEvent);
+	}
+	
+	
+	
+	
+}
+
+class EntryFocus implements EventHandler<MouseEvent>{
+	@Override
+	public void handle(MouseEvent e){
+		((VariableEntryField)e.getSource()).clear();
+	}//this mouse event needs to be fixed
+	
+}
+

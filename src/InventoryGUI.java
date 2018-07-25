@@ -106,7 +106,7 @@ public class InventoryGUI extends Application implements InventoryWorkbookReader
 		
 		primaryStage.setTitle("Amaria Start Screen");
 		primaryStage.setScene(scene);
-		scene.getStylesheets().add("InventoryStyleSheet.css");
+		scene.getStylesheets().add("inventoryStyleSheet.css");
 		primaryStage.show();
 		
 	}

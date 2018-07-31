@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -64,20 +65,24 @@ public class ComputationScreen extends VBox{
 		
 		
 		targetVolumeLabel = new AdditionLabel("Target Volume: ");
-		targetVolumeInput = new VariableEntryField();
-		targetVolumeInput.setText("Target Volume");
+		targetVolumeInput = new VariableEntryField("Target Volume");
+//		targetVolumeInput.setText("Target Volume");
+		targetVolumeInput.setId("tarVol");
 		targetConcentrationLabel = new AdditionLabel("Target Concentration: ");
-		targetConcentrationInput = new VariableEntryField();
-		targetConcentrationInput.setText("Target Concentration");
+		targetConcentrationInput = new VariableEntryField("Target Concentration");
+//		targetConcentrationInput.setText("Target Concentration");
+		targetConcentrationInput.setId("tarCon");
 		
 		drugOptionLabel = new AdditionLabel("Drug Option: ");
 		options = new ComboBox<String>();
 		diluentLabel = new AdditionLabel("Amount of Diluent: ");
-		diluentInput = new VariableEntryField();
-		diluentInput.setText("Amount of Diluent");
+		diluentInput = new VariableEntryField("Amout of Diluent");
+//		diluentInput.setText("Amount of Diluent");
+		diluentInput.setId("dilIn");
 		drugLabel = new AdditionLabel("Amount of Diluent: ");
-		drugInput = new VariableEntryField();
-		drugInput.setText("Amount of Drug");
+		drugInput = new VariableEntryField("Amount of Diluent");
+//		drugInput.setText("Amount of Drug");
+		drugInput.setId("druIn");
 		aliquotButton = new InventoryButton("Make Aliquots");
 		byMassButton  = new InventoryButton("Find By Mass");
 		byVolumeButton = new InventoryButton("Find By Volume");
@@ -227,12 +232,51 @@ public class ComputationScreen extends VBox{
 
 class VariableEntryField extends InventoryTextFields{
 	EntryFocus focusEvent;
+	EntryBlur blurEvent;
+	EntryChange inputEvent;
+	String name;
+	boolean valueChanged;
 	
-	VariableEntryField(){
+	VariableEntryField(String name){
 		super();
+		this.name = name;
+		this.setText(name);
 		this.getStyleClass().add("emptyEntry");
 		focusEvent = new EntryFocus();
-		this.setOnMouseClicked(focusEvent);
+		blurEvent = new EntryBlur();
+		inputEvent = new EntryChange();
+		this.setOnMouseEntered(focusEvent);
+		this.setOnMouseExited(blurEvent);
+		this.setOnInputMethodTextChanged(inputEvent);
+		this.valueChanged = false;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the valueChanged
+	 */
+	public boolean isValueChanged() {
+		return valueChanged;
+	}
+
+	/**
+	 * @param valueChanged the valueChanged to set
+	 */
+	public void setValueChanged(boolean valueChanged) {
+		this.valueChanged = valueChanged;
 	}
 	
 	
@@ -241,10 +285,41 @@ class VariableEntryField extends InventoryTextFields{
 }
 
 class EntryFocus implements EventHandler<MouseEvent>{
+	VariableEntryField source;
 	@Override
 	public void handle(MouseEvent e){
-		((VariableEntryField)e.getSource()).clear();
-	}//this mouse event needs to be fixed
+		source = (VariableEntryField)e.getSource();
+		if(!source.isValueChanged()){
+			source.clear();
+		}	
+	}
 	
+}
+
+class EntryBlur implements EventHandler<MouseEvent>{
+	String label;
+	VariableEntryField source;
+	@Override
+	public void handle(MouseEvent e){
+		source = (VariableEntryField)e.getSource();
+		if(!source.isFocused() && !source.isValueChanged()){
+			switch(((VariableEntryField)e.getSource()).getId()){
+			case "tarCon":  label = "Target Concentration";break;
+			case "dilIn": label = "Amount of Diluent"; break;
+			case "druIn": label = "Amount of Drug";break;
+			case "tarVol": label = "Target Volume"; break;
+			}
+			source.setText(label);
+
+		}
+		
+	}
+}
+
+class EntryChange implements EventHandler<InputMethodEvent>{
+	@Override
+	public void handle(InputMethodEvent e){
+		((VariableEntryField)e.getSource()).setValueChanged(true);
+	}
 }
 
